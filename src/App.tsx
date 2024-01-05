@@ -15,6 +15,21 @@ function App() {
     [90, 95, 100, 75, 50, 25],
   ];
 
+  // generated with https://maketintsandshades.com/#5AC8FA
+  const colors = [
+    "#5ac8fa",
+    "#6bcefb",
+    "#7bd3fb",
+    "#8cd9fc",
+    "#9cdefc",
+    "#ade4fd",
+    "#bde9fd",
+    "#ceeffe",
+    "#def4fe",
+    "#effaff",
+    "#ffffff",
+  ];
+
   const rowLetters = ["A", "B", "C", "D", "E", "F"];
   const columnNumbers = [1, 2, 3, 4];
 
@@ -41,7 +56,7 @@ function App() {
           >
             {rowLetters.map((letter) => (
               <div
-                className="cell"
+                className="titleCell"
                 role="cell"
                 key={letter}
                 style={{ width: 100, height: 50, margin: 2 }}
@@ -74,12 +89,9 @@ function App() {
                   return (
                     <div
                       style={{
-                        width: 100,
-                        height: 100,
-                        margin: 2,
-                        backgroundColor: "#0A415E",
-                        opacity: cell / 100,
+                        backgroundColor: colors[Math.floor(cell / 10)],
                       }}
+                      className="cell"
                       role="cell"
                       key={template[rowIndex][cellIndex]}
                     >
