@@ -1,6 +1,7 @@
 #root {
   min-height: 900px;
   margin: 0 auto;
+  background-color: #012d44;
 }
 .panels {
   width: 100%;
@@ -12,12 +13,22 @@
 
 .half-panel {
   padding: 0 40px;
+  color: #e3e8f1;
+}
+
+.titleCell {
+  width: 30px;
+  height: 100px;
+  margin: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cell {
-  width: 30px;
+  width: 100px;
   height: 100px;
-  margin: 4px;
+  margin: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
