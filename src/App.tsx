@@ -1,6 +1,7 @@
 import useWebSocket from "react-use-websocket";
 
 import "./App.css";
+import { JsonMessage } from "./types";
 
 const WEBSOCKET_URL = "ws://localhost:8765/data";
 const TEMPLATE = [
@@ -18,13 +19,15 @@ function App() {
     shouldReconnect: () => true,
   });
 
-  const usage = (lastJsonMessage && lastJsonMessage.grid) || [
+  const usage: number[][] = lastJsonMessage ? (lastJsonMessage as JsonMessage).grid : [
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
   ];
-  const frame = lastJsonMessage ? `data:image/png;base64, ${lastJsonMessage.frame}` : "/assets/temp-img.png";
+  const frame = lastJsonMessage
+    ? `data:image/png;base64, ${(lastJsonMessage as JsonMessage).frame}`
+    : "/assets/temp-img.png";
 
   return (
     <div className="panels">
