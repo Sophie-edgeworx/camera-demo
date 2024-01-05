@@ -3,6 +3,20 @@ import useWebSocket from "react-use-websocket";
 import "./App.css";
 import { JsonMessage } from "./types";
 
+// generated with https://maketintsandshades.com/#5AC8FA
+const COLORS = [
+  "#5ac8fa",
+  "#6bcefb",
+  "#7bd3fb",
+  "#8cd9fc",
+  "#9cdefc",
+  "#ade4fd",
+  "#bde9fd",
+  "#ceeffe",
+  "#def4fe",
+  "#effaff",
+  "#ffffff",
+];
 const WEBSOCKET_URL = "ws://localhost:8765/data";
 const TEMPLATE = [
   ["A1", "B1", "C1", "D1", "E1", "F1"],
@@ -19,12 +33,15 @@ function App() {
     shouldReconnect: () => true,
   });
 
-  const usage: number[][] = lastJsonMessage ? (lastJsonMessage as JsonMessage).grid : [
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-  ];
+  const usage: number[][] = lastJsonMessage
+    ? (lastJsonMessage as JsonMessage).grid
+    : [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+      ];
+
   const frame = lastJsonMessage
     ? `data:image/png;base64, ${(lastJsonMessage as JsonMessage).frame}`
     : "/assets/temp-img.png";
@@ -52,7 +69,7 @@ function App() {
           >
             {ROW_LETTERS.map((letter) => (
               <div
-                className="cell"
+                className="titleCell"
                 role="cell"
                 key={letter}
                 style={{ width: 100, height: 50, margin: 2 }}
@@ -85,12 +102,9 @@ function App() {
                   return (
                     <div
                       style={{
-                        width: 100,
-                        height: 100,
-                        margin: 2,
-                        backgroundColor: "#0A415E",
-                        opacity: cell / 100,
+                        backgroundColor: COLORS[Math.floor(cell / 10)],
                       }}
+                      className="cell"
                       role="cell"
                       key={TEMPLATE[rowIndex][cellIndex]}
                     >
