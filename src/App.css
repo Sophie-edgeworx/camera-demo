@@ -1,3 +1,7 @@
+body {
+  background-color: #012d44;
+}
+
 #root {
   min-height: 900px;
   margin: 0 auto;

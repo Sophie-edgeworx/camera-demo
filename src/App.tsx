@@ -45,6 +45,7 @@ function App() {
   const frame = lastJsonMessage
     ? `data:image/png;base64, ${(lastJsonMessage as JsonMessage).frame}`
     : "/assets/temp-img.png";
+  // generated with https://maketintsandshades.com/#5AC8FA
 
   return (
     <div className="panels">
