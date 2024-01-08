@@ -30,7 +30,7 @@ const TEMPLATE = [
 const ROW_LETTERS = ["A", "B", "C", "D", "E", "F"];
 const COLUMN_NUMBERS = [1, 2, 3, 4];
 // TODO check and adjust this
-const MIN_DATE_TIME = "2022-01-05T00:00";
+const MIN_DATE_TIME = "2022-01-04T00:00";
 const MAX_DATE_TIME = new Date().toISOString().split(".")[0];
 
 function App() {
@@ -39,23 +39,38 @@ function App() {
     shouldReconnect: () => true,
   });
 
-  const usage: number[][] = lastJsonMessage
-    ? (lastJsonMessage as JsonMessage).grid
-    : [
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-      ];
+  // const usage: number[][] = isPlaying ? (lastJsonMessage
+  //   ? (lastJsonMessage as JsonMessage).grid
+  //   : [
+  //       [0, 0, 0, 0, 0, 0],
+  //       [0, 0, 0, 0, 0, 0],
+  //       [0, 0, 0, 0, 0, 0],
+  //       [0, 0, 0, 0, 0, 0],
+  //     ]) : actualUsage ? ;
 
   const frame = lastJsonMessage
     ? `data:image/png;base64, ${(lastJsonMessage as JsonMessage).frame}`
     : "/assets/temp-img.png";
 
-  // const [actualUsage, setActualUsage] = useState(usage);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [isPlaying, setIsPlaying] = useState(false);
+  let usage: number[][] = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+  ];
+
+  const [actualUsage, setActualUsage] = useState(usage);
+  const [startTime, setStartTime] = useState("2024-01-04T11:11");
+  const [endTime, setEndTime] = useState("2024-01-04T11:20");
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  if (isPlaying) {
+    if (lastJsonMessage) {
+      usage = (lastJsonMessage as JsonMessage).grid;
+    }
+  } else if (actualUsage) {
+    usage = actualUsage;
+  }
 
   const getAggregateData = () => {
     setIsPlaying(false);
@@ -66,28 +81,42 @@ function App() {
 
     // TODO get the aggregate with a call like this
 
-    //   async function getAggregate(time1: string, time2: string) {
-    //     await getAggregateAPICall
-    //       .then((resp: Response) => {
-    //         setActualUsage(resp.data);
-    //       })
-    //       .catch((error: Error) => {
-    //         console.log(error.message);
-    //       });
-    //   }
+    async function getAggregate(time1, time2) {
+      try {
+        const response = await fetch(
+          `http://localhost:8766/aggregate/${time1}/${time2}`
+        );
+        const responseJson = await response.json();
+        setActualUsage(responseJson.grid);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
 
-    //   getAggregate(startTimeStamp, endTimeStamp);
+    getAggregate(startTimeStamp, endTimeStamp);
   };
 
-  useEffect(() => {
-    if (isPlaying) {
-      setStartTime("");
-      setEndTime("");
-      // TODO start the websocket
-    } else {
-      // TODO stop the websocket here
-    }
-  }, [isPlaying]);
+  const start = () => {
+    fetch("http://localhost:8766/start", { method: "POST" })
+      .then(() => setIsPlaying(true))
+      .catch((err) => console.log(err));
+  };
+
+  const stop = () => {
+    fetch("http://localhost:8766/stop", { method: "POST" })
+      .then(() => setIsPlaying(false))
+      .catch((err) => console.log(err));
+  };
+
+  // useEffect(() => {
+  //   if (isPlaying) {
+  //     setStartTime("");
+  //     setEndTime("");
+  //     // TODO start the websocket
+  //   } else {
+  //     // TODO stop the websocket here
+  //   }
+  // }, [isPlaying]);
 
   return (
     <div className="panels">
@@ -97,13 +126,13 @@ function App() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button
             className={isPlaying ? "inActiveButton" : "activeButton"}
-            onClick={() => setIsPlaying(false)}
+            onClick={stop}
           >
             <PauseIcon />
           </button>
           <button
             className={isPlaying ? "activeButton" : "inActiveButton"}
-            onClick={() => setIsPlaying(true)}
+            onClick={start}
           >
             <PlayIcon />
           </button>
