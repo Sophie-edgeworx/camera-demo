@@ -43,3 +43,49 @@ h2 {
   font-family: "Verdana", sans-serif;
   font-weight: 400;
 }
+
+.activeButton,
+.inActiveButton {
+  background-color: transparent;
+}
+
+.inActiveButton svg {
+  fill: #a9b2bc;
+}
+
+.activeButton:active,
+.activeButton:focus,
+.activeButton:focus-visible,
+.activeButton:hover,
+.inActiveButton:active,
+.inActiveButton:focus,
+.inActiveButton:focus-visible,
+.inActiveButton:hover {
+  border: none;
+  outline: none;
+}
+
+.inActiveButton:active:hover svg {
+  fill: white;
+}
+
+.inActiveButton:hover svg {
+  fill: #767d84;
+}
+
+.activeButton svg {
+  fill: white;
+}
+
+.aggregateButton {
+  background-color: white;
+  margin: 0 auto;
+}
+.aggregateButton:disabled {
+  background-color: #767d84;
+}
+
+.aggregateButton:focus {
+  outline: none;
+  background-color: #a9b2bc;
+}
