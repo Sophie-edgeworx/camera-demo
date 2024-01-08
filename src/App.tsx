@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useWebSocket from "react-use-websocket";
 
 import "./App.css";
@@ -6,20 +6,6 @@ import { JsonMessage } from "./types";
 import PlayIcon from "./icons/PlayIcon";
 import PauseIcon from "./icons/PauseIcon";
 
-// generated with https://maketintsandshades.com/#5AC8FA
-const COLORS = [
-  "#ffffff",
-  "#effaff",
-  "#def4fe",
-  "#ceeffe",
-  "#bde9fd",
-  "#ade4fd",
-  "#9cdefc",
-  "#8cd9fc",
-  "#7bd3fb",
-  "#6bcefb",
-  "#5ac8fa",
-];
 const WEBSOCKET_URL = "ws://localhost:8765/data";
 const TEMPLATE = [
   ["A1", "B1", "C1", "D1", "E1", "F1"],
@@ -74,14 +60,12 @@ function App() {
 
   const getAggregateData = () => {
     setIsPlaying(false);
-    const startTimeStamp = new Date(startTime).getTime();
-    const endTimeStamp = new Date(endTime).getTime();
-    console.log("🚀 getAggregateData ~ startTime:", startTime, startTimeStamp);
-    console.log("🚀  getAggregateData ~ endTime:", endTime, endTimeStamp);
+    const startTimeStamp = new Date(startTime).getTime().toString();
+    const endTimeStamp = new Date(endTime).getTime().toString();
 
     // TODO get the aggregate with a call like this
 
-    async function getAggregate(time1, time2) {
+    async function getAggregate(time1: string, time2: string) {
       try {
         const response = await fetch(
           `http://localhost:8766/aggregate/${time1}/${time2}`
@@ -185,10 +169,12 @@ function App() {
                   {COLUMN_NUMBERS[rowIndex]}
                 </div>
                 {row.map((cell, cellIndex) => {
+                  const cellOpacity = cell < 5 ? 0.05 : cell / 100;
                   return (
                     <div
                       style={{
-                        backgroundColor: COLORS[Math.floor(cell / 10)],
+                        backgroundColor: "#5AC8FA",
+                        opacity: cellOpacity,
                       }}
                       className="cell"
                       role="cell"
