@@ -18,6 +18,12 @@ const COLUMN_NUMBERS = [1, 2, 3, 4];
 // TODO check and adjust this
 const MIN_DATE_TIME = "2022-01-04T00:00";
 const MAX_DATE_TIME = new Date().toISOString().split(".")[0];
+const EMPTY_GRID: number[][] = [
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0],
+];
 
 function App() {
   const { lastJsonMessage } = useWebSocket(WEBSOCKET_URL, {
@@ -38,17 +44,12 @@ function App() {
     ? `data:image/png;base64, ${(lastJsonMessage as JsonMessage).frame}`
     : "/assets/temp-img.png";
 
-  let usage: number[][] = [
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-  ];
+  let usage: number[][] = EMPTY_GRID;
 
   const [actualUsage, setActualUsage] = useState(usage);
   const [startTime, setStartTime] = useState("2024-01-04T11:11");
   const [endTime, setEndTime] = useState("2024-01-04T11:20");
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   if (isPlaying) {
     if (lastJsonMessage) {
@@ -58,8 +59,21 @@ function App() {
     usage = actualUsage;
   }
 
+  const start = () => {
+    setActualUsage(EMPTY_GRID);
+    fetch("http://localhost:8766/start", { method: "POST" })
+      .then(() => setIsPlaying(true))
+      .catch((err) => console.log(err));
+  };
+
+  const stop = () => {
+    fetch("http://localhost:8766/stop", { method: "POST" })
+      .then(() => setIsPlaying(false))
+      .catch((err) => console.log(err));
+  };
+
   const getAggregateData = () => {
-    setIsPlaying(false);
+    stop();
     const startTimeStamp = new Date(startTime).getTime().toString();
     const endTimeStamp = new Date(endTime).getTime().toString();
 
@@ -78,18 +92,6 @@ function App() {
     }
 
     getAggregate(startTimeStamp, endTimeStamp);
-  };
-
-  const start = () => {
-    fetch("http://localhost:8766/start", { method: "POST" })
-      .then(() => setIsPlaying(true))
-      .catch((err) => console.log(err));
-  };
-
-  const stop = () => {
-    fetch("http://localhost:8766/stop", { method: "POST" })
-      .then(() => setIsPlaying(false))
-      .catch((err) => console.log(err));
   };
 
   // useEffect(() => {
