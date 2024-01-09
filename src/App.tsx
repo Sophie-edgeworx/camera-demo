@@ -31,15 +31,6 @@ function App() {
     shouldReconnect: () => true,
   });
 
-  // const usage: number[][] = isPlaying ? (lastJsonMessage
-  //   ? (lastJsonMessage as JsonMessage).grid
-  //   : [
-  //       [0, 0, 0, 0, 0, 0],
-  //       [0, 0, 0, 0, 0, 0],
-  //       [0, 0, 0, 0, 0, 0],
-  //       [0, 0, 0, 0, 0, 0],
-  //     ]) : actualUsage ? ;
-
   const frame = lastJsonMessage
     ? `data:image/png;base64, ${(lastJsonMessage as JsonMessage).frame}`
     : "/assets/temp-img.png";
@@ -87,22 +78,12 @@ function App() {
         const responseJson = await response.json();
         setActualUsage(responseJson.grid);
       } catch (error) {
-        console.log(error.message);
+        console.log(error);
       }
     }
 
     getAggregate(startTimeStamp, endTimeStamp);
   };
-
-  // useEffect(() => {
-  //   if (isPlaying) {
-  //     setStartTime("");
-  //     setEndTime("");
-  //     // TODO start the websocket
-  //   } else {
-  //     // TODO stop the websocket here
-  //   }
-  // }, [isPlaying]);
 
   return (
     <div className="panels">
